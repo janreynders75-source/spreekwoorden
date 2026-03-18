@@ -1,262 +1,297 @@
-import React, { useState } from 'react';
-import { Trophy, Activity, Target, ClipboardList, Info, Dumbbell, Play, CheckCircle2, Quote, MessageSquare } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taal-Playbook voor Sporters</title>
+    <!-- Tailwind CSS voor styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React en ReactDOM via CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel voor JSX ondersteuning in de browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-100">
+    <div id="root"></div>
 
-const App = () => {
-  const [activeTab, setActiveTab] = useState('theory');
-  const [score, setScore] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [showResult, setShowResult] = useState(false);
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-  const categories = [
-    {
-      title: "Spreekwoorden",
-      subtitle: "De Gouden Wedstrijdregels",
-      description: "Een complete zin die altijd hetzelfde blijft. Het is een onveranderlijke wijsheid of een wetmatigheid.",
-      sportExample: "Hardlopers zijn doodlopers.",
-      rule: "Niet aanpasbaar in tijd of persoon.",
-      icon: <Trophy className="text-yellow-500" />,
-      color: "bg-yellow-50 border-yellow-200"
-    },
-    {
-      title: "Zegswijzen",
-      subtitle: "De Aanvalsstrategie",
-      description: "Bevat een werkwoord en beschrijft een actie. Je moet het vervoegen om het in je zin te laten passen.",
-      sportExample: "De handdoek in de ring gooien.",
-      rule: "Aanpasbaar (bijv. 'Hij gooide de handdoek in de ring').",
-      icon: <Activity className="text-blue-500" />,
-      color: "bg-blue-50 border-blue-200"
-    },
-    {
-      title: "Gezegden",
-      subtitle: "De Tactische Omschrijving",
-      description: "Een vaste groep woorden zonder werkwoord. Het geeft kleur aan je zin en fungeert als zinsdeel.",
-      sportExample: "Een schot in de roos.",
-      rule: "Geen werkwoord aanwezig.",
-      icon: <Target className="text-red-500" />,
-      color: "bg-red-50 border-red-200"
-    },
-    {
-      title: "Uitdrukkingen",
-      subtitle: "De Teampresentatie",
-      description: "De overkoepelende term voor alle vaste verbindingen met een figuurlijke betekenis.",
-      sportExample: "Een balletje opgooien.",
-      rule: "Wordt vaak als verzamelnaam gebruikt.",
-      icon: <MessageSquare className="text-purple-500" />,
-      color: "bg-purple-50 border-purple-200"
-    },
-    {
-      title: "Spreuken",
-      subtitle: "De Locker Room Quote",
-      description: "Korte, krachtige teksten die bedoeld zijn om te inspireren of te motiveren.",
-      sportExample: "Deelnemen is belangrijker dan winnen.",
-      rule: "Vaak motiverend, minder 'star' dan een spreekwoord.",
-      icon: <Quote className="text-orange-500" />,
-      color: "bg-orange-50 border-orange-200"
-    },
-    {
-      title: "Vergelijkingen",
-      subtitle: "Het Scouting Report",
-      description: "Je vergelijkt iemand met iets anders om een eigenschap te benadrukken (vaak met 'als' of 'zo').",
-      sportExample: "Zo fit als een hoentje.",
-      rule: "Versterkt een specifiek kenmerk.",
-      icon: <Dumbbell className="text-green-500" />,
-      color: "bg-green-50 border-green-200"
-    }
-  ];
+        // Eenvoudige icon componenten voor de browser
+        const Icon = ({ name, colorClass = "", size = 24 }) => {
+            useEffect(() => {
+                lucide.createIcons();
+            }, [name]);
+            return <i data-lucide={name} className={`${colorClass}`} style={{ width: size, height: size }}></i>;
+        };
 
-  const quizQuestions = [
-    {
-      text: "'De bal aan de voet hebben'",
-      options: ["Spreekwoord", "Zegswijze", "Gezegde"],
-      correct: 1,
-      explanation: "Het bevat een werkwoord ('hebben') en je kunt het aanpassen: 'Ik heb de bal aan de voet'."
-    },
-    {
-      text: "'De beste stuurlui staan aan wal'",
-      options: ["Spreekwoord", "Gezegde", "Spreuk"],
-      correct: 0,
-      explanation: "Het is een volledige, onveranderlijke zin met een algemene levensles."
-    },
-    {
-      text: "'Een sportieve prestatie'",
-      options: ["Zegswijze", "Spreekwoord", "Gezegde"],
-      correct: 2,
-      explanation: "Het is een vaste woordgroep zonder werkwoord."
-    },
-    {
-      text: "'Plezier is de sleutel tot succes'",
-      options: ["Spreuk", "Zegswijze", "Vergelijking"],
-      correct: 0,
-      explanation: "Dit is een motiverende uitspraak, typisch voor op een poster in de kleedkamer."
-    },
-    {
-      text: "'Buiten spel staan'",
-      options: ["Spreekwoord", "Gezegde", "Uitdrukking"],
-      correct: 2,
-      explanation: "Dit is een vaste combinatie die we figuurlijk gebruiken; het is een bekende uitdrukking."
-    },
-    {
-      text: "'Zo sterk als een beer'",
-      options: ["Vergelijking", "Spreekwoord", "Spreuk"],
-      correct: 0,
-      explanation: "Het vergelijkt kracht met een beer met behulp van 'als'."
-    }
-  ];
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('theory');
+            const [score, setScore] = useState(0);
+            const [currentQuestion, setCurrentQuestion] = useState(0);
+            const [showResult, setShowResult] = useState(false);
 
-  const handleAnswer = (index) => {
-    if (index === quizQuestions[currentQuestion].correct) {
-      setScore(score + 1);
-    }
-    
-    if (currentQuestion + 1 < quizQuestions.length) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      setShowResult(true);
-    }
-  };
+            const categories = [
+                {
+                    title: "Spreekwoorden",
+                    subtitle: "De Gouden Wedstrijdregels",
+                    description: "Een complete zin die altijd hetzelfde blijft. Het is een onveranderlijke wijsheid of een wetmatigheid.",
+                    sportExample: "Hardlopers zijn doodlopers.",
+                    rule: "Niet aanpasbaar in tijd of persoon.",
+                    icon: "trophy",
+                    iconColor: "text-yellow-500",
+                    color: "bg-yellow-50 border-yellow-200"
+                },
+                {
+                    title: "Zegswijzen",
+                    subtitle: "De Aanvalsstrategie",
+                    description: "Bevat een werkwoord en beschrijft een actie. Je moet het vervoegen om het in je zin te laten passen.",
+                    sportExample: "De handdoek in de ring gooien.",
+                    rule: "Aanpasbaar (bijv. 'Hij gooide de handdoek in de ring').",
+                    icon: "activity",
+                    iconColor: "text-blue-500",
+                    color: "bg-blue-50 border-blue-200"
+                },
+                {
+                    title: "Gezegden",
+                    subtitle: "De Tactische Omschrijving",
+                    description: "Een vaste groep woorden zonder werkwoord. Het geeft kleur aan je zin en fungeert als zinsdeel.",
+                    sportExample: "Een schot in de roos.",
+                    rule: "Geen werkwoord aanwezig.",
+                    icon: "target",
+                    iconColor: "text-red-500",
+                    color: "bg-red-50 border-red-200"
+                },
+                {
+                    title: "Uitdrukkingen",
+                    subtitle: "De Teampresentatie",
+                    description: "De overkoepelende term voor alle vaste verbindingen met een figuurlijke betekenis.",
+                    sportExample: "Een balletje opgooien.",
+                    rule: "Wordt vaak als verzamelnaam gebruikt.",
+                    icon: "message-square",
+                    iconColor: "text-purple-500",
+                    color: "bg-purple-50 border-purple-200"
+                },
+                {
+                    title: "Spreuken",
+                    subtitle: "De Locker Room Quote",
+                    description: "Korte, krachtige teksten die bedoeld zijn om te inspireren of te motiveren.",
+                    sportExample: "Deelnemen is belangrijker dan winnen.",
+                    rule: "Vaak motiverend, minder 'star' dan een spreekwoord.",
+                    icon: "quote",
+                    iconColor: "text-orange-500",
+                    color: "bg-orange-50 border-orange-200"
+                },
+                {
+                    title: "Vergelijkingen",
+                    subtitle: "Het Scouting Report",
+                    description: "Je vergelijkt iemand met iets anders om een eigenschap te benadrukken (vaak met 'als' of 'zo').",
+                    sportExample: "Zo fit als een hoentje.",
+                    rule: "Versterkt een specifiek kenmerk.",
+                    icon: "dumbbell",
+                    iconColor: "text-green-500",
+                    color: "bg-green-50 border-green-200"
+                }
+            ];
 
-  const resetQuiz = () => {
-    setScore(0);
-    setCurrentQuestion(0);
-    setShowResult(false);
-  };
+            const quizQuestions = [
+                {
+                    text: "'De bal aan de voet hebben'",
+                    options: ["Spreekwoord", "Zegswijze", "Gezegde"],
+                    correct: 1,
+                    explanation: "Het bevat een werkwoord ('hebben') en je kunt het aanpassen: 'Ik heb de bal aan de voet'."
+                },
+                {
+                    text: "'De beste stuurlui staan aan wal'",
+                    options: ["Spreekwoord", "Gezegde", "Spreuk"],
+                    correct: 0,
+                    explanation: "Het is een volledige, onveranderlijke zin met een algemene levensles."
+                },
+                {
+                    text: "'Een sportieve prestatie'",
+                    options: ["Zegswijze", "Spreekwoord", "Gezegde"],
+                    correct: 2,
+                    explanation: "Het is een vaste woordgroep zonder werkwoord."
+                },
+                {
+                    text: "'Plezier is de sleutel tot succes'",
+                    options: ["Spreuk", "Zegswijze", "Vergelijking"],
+                    correct: 0,
+                    explanation: "Dit is een motiverende uitspraak, typisch voor op een poster in de kleedkamer."
+                },
+                {
+                    text: "'Buiten spel staan'",
+                    options: ["Spreekwoord", "Gezegde", "Uitdrukking"],
+                    correct: 2,
+                    explanation: "Dit is een vaste combinatie die we figuurlijk gebruiken; het is een bekende uitdrukking."
+                },
+                {
+                    text: "'Zo sterk als een beer'",
+                    options: ["Vergelijking", "Spreekwoord", "Spreuk"],
+                    correct: 0,
+                    explanation: "Het vergelijkt kracht met een beer met behulp van 'als'."
+                }
+            ];
 
-  return (
-    <div className="min-h-screen bg-slate-100 p-4 md:p-8 font-sans">
-      <header className="max-w-6xl mx-auto mb-8 text-center">
-        <h1 className="text-4xl font-extrabold text-slate-900 mb-2 flex justify-center items-center gap-3">
-          <Play className="fill-blue-600 text-blue-600" />
-          Taal-Playbook voor Sporters
-        </h1>
-        <p className="text-slate-600 text-lg">Scoor met je Nederlands: Spreekwoorden, Zegswijzen & Gezegden</p>
-      </header>
-
-      <div className="max-w-6xl mx-auto flex flex-col gap-8">
-        <div className="flex bg-white p-1 rounded-xl shadow-sm self-center">
-          <button 
-            onClick={() => setActiveTab('theory')}
-            className={`px-6 py-2 rounded-lg font-bold transition-all ${activeTab === 'theory' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}
-          >
-            Tactisch Bord (Theorie)
-          </button>
-          <button 
-            onClick={() => setActiveTab('quiz')}
-            className={`px-6 py-2 rounded-lg font-bold transition-all ${activeTab === 'quiz' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}
-          >
-            De Warming-up (Quiz)
-          </button>
-        </div>
-
-        {activeTab === 'theory' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {categories.map((cat, idx) => (
-              <div key={idx} className={`p-6 rounded-2xl border-2 shadow-sm transition-transform hover:scale-[1.02] ${cat.color}`}>
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 block">Categorie</span>
-                    <h2 className="text-xl font-bold text-slate-800">{cat.title}</h2>
-                    <p className="text-sm font-medium text-slate-600 italic">{cat.subtitle}</p>
-                  </div>
-                  <div className="p-3 bg-white rounded-xl shadow-sm">
-                    {cat.icon}
-                  </div>
-                </div>
+            const handleAnswer = (index) => {
+                if (index === quizQuestions[currentQuestion].correct) {
+                    setScore(score + 1);
+                }
                 
-                <p className="text-sm text-slate-700 mb-4 leading-relaxed min-h-[60px]">
-                  {cat.description}
-                </p>
+                if (currentQuestion + 1 < quizQuestions.length) {
+                    setCurrentQuestion(currentQuestion + 1);
+                } else {
+                    setShowResult(true);
+                }
+            };
 
-                <div className="space-y-3">
-                  <div className="bg-white/60 p-3 rounded-lg border border-white">
-                    <p className="text-xs font-bold text-slate-500 uppercase">Voorbeeld uit de sport:</p>
-                    <p className="text-md font-bold text-slate-900 italic">"{cat.sportExample}"</p>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-slate-600">
-                    <Info size={14} className="shrink-0" />
-                    <span><strong>Spelregel:</strong> {cat.rule}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="max-w-2xl mx-auto w-full">
-            <div className="bg-white p-8 rounded-3xl shadow-lg border border-slate-200">
-              {!showResult ? (
-                <>
-                  <div className="mb-6 flex justify-between items-center">
-                    <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-bold">
-                      Vraag {currentQuestion + 1} / {quizQuestions.length}
-                    </span>
-                    <div className="h-2 w-32 bg-slate-100 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-blue-500 transition-all" 
-                        style={{ width: `${((currentQuestion) / quizQuestions.length) * 100}%` }}
-                      ></div>
+            const resetQuiz = () => {
+                setScore(0);
+                setCurrentQuestion(0);
+                setShowResult(false);
+            };
+
+            return (
+                <div className="min-h-screen p-4 md:p-8">
+                    <header className="max-w-6xl mx-auto mb-8 text-center">
+                        <h1 className="text-4xl font-extrabold text-slate-900 mb-2 flex justify-center items-center gap-3">
+                            <Icon name="play" colorClass="text-blue-600 fill-blue-600" />
+                            Taal-Playbook voor Sporters
+                        </h1>
+                        <p className="text-slate-600 text-lg">Scoor met je Nederlands: Spreekwoorden, Zegswijzen & Gezegden</p>
+                    </header>
+
+                    <div className="max-w-6xl mx-auto flex flex-col gap-8">
+                        <div className="flex bg-white p-1 rounded-xl shadow-sm self-center">
+                            <button 
+                                onClick={() => setActiveTab('theory')}
+                                className={`px-6 py-2 rounded-lg font-bold transition-all ${activeTab === 'theory' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}
+                            >
+                                Tactisch Bord (Theorie)
+                            </button>
+                            <button 
+                                onClick={() => setActiveTab('quiz')}
+                                className={`px-6 py-2 rounded-lg font-bold transition-all ${activeTab === 'quiz' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}
+                            >
+                                De Warming-up (Quiz)
+                            </button>
+                        </div>
+
+                        {activeTab === 'theory' ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {categories.map((cat, idx) => (
+                                    <div key={idx} className={`p-6 rounded-2xl border-2 shadow-sm transition-transform hover:scale-[1.02] ${cat.color}`}>
+                                        <div className="flex items-start justify-between mb-4">
+                                            <div>
+                                                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 block">Categorie</span>
+                                                <h2 className="text-xl font-bold text-slate-800">{cat.title}</h2>
+                                                <p className="text-sm font-medium text-slate-600 italic">{cat.subtitle}</p>
+                                            </div>
+                                            <div className="p-3 bg-white rounded-xl shadow-sm">
+                                                <Icon name={cat.icon} colorClass={cat.iconColor} />
+                                            </div>
+                                        </div>
+                                        
+                                        <p className="text-sm text-slate-700 mb-4 leading-relaxed min-h-[60px]">
+                                            {cat.description}
+                                        </p>
+
+                                        <div className="space-y-3">
+                                            <div className="bg-white/60 p-3 rounded-lg border border-white">
+                                                <p className="text-xs font-bold text-slate-500 uppercase">Voorbeeld uit de sport:</p>
+                                                <p className="text-md font-bold text-slate-900 italic">"{cat.sportExample}"</p>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-xs text-slate-600">
+                                                <Icon name="info" size={14} />
+                                                <span><strong>Spelregel:</strong> {cat.rule}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="max-w-2xl mx-auto w-full">
+                                <div className="bg-white p-8 rounded-3xl shadow-lg border border-slate-200">
+                                    {!showResult ? (
+                                        <>
+                                            <div className="mb-6 flex justify-between items-center">
+                                                <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-bold">
+                                                    Vraag {currentQuestion + 1} / {quizQuestions.length}
+                                                </span>
+                                            </div>
+                                            
+                                            <h3 className="text-2xl font-bold text-slate-800 mb-8 text-center">
+                                                Welke categorie is dit? <br/>
+                                                <span className="text-blue-600 mt-2 block italic text-3xl">"{quizQuestions[currentQuestion].text}"</span>
+                                            </h3>
+
+                                            <div className="grid gap-3">
+                                                {quizQuestions[currentQuestion].options.map((opt, i) => (
+                                                    <button
+                                                        key={i}
+                                                        onClick={() => handleAnswer(i)}
+                                                        className="w-full text-left p-4 rounded-xl border-2 border-slate-100 hover:border-blue-500 hover:bg-blue-50 transition-all font-bold text-slate-700 flex justify-between items-center group"
+                                                    >
+                                                        {opt}
+                                                        <div className="w-6 h-6 rounded-full border-2 border-slate-200 group-hover:border-blue-500"></div>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="text-center">
+                                            <div className="inline-block p-4 bg-green-100 rounded-full mb-4">
+                                                <Icon name="check-circle-2" size={48} colorClass="text-green-600" />
+                                            </div>
+                                            <h3 className="text-3xl font-bold text-slate-800 mb-2">Eindsignaal!</h3>
+                                            <p className="text-slate-600 text-lg mb-6">Je score: <span className="text-blue-600 font-extrabold">{score} van de {quizQuestions.length}</span></p>
+                                            
+                                            <div className="space-y-4 text-left mb-8 max-h-60 overflow-y-auto pr-2">
+                                                <p className="font-bold text-slate-700">Terugblik op de wedstrijd:</p>
+                                                {quizQuestions.map((q, i) => (
+                                                    <div key={i} className="text-sm p-3 bg-slate-50 rounded-lg border-l-4 border-blue-400">
+                                                        <p className="font-bold">{q.text}</p>
+                                                        <p className="text-slate-600">{q.explanation}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <button 
+                                                onClick={resetQuiz}
+                                                className="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors"
+                                            >
+                                                Opnieuw proberen
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        <footer className="mt-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <h4 className="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <Icon name="clipboard-list" colorClass="text-blue-600" size={20} />
+                                Pro Tip voor je Verslag
+                            </h4>
+                            <p className="text-slate-600 text-sm">
+                                Spreuken zijn perfect als <strong>tussenkopje</strong> of <strong>uitsmijter</strong> in een interview. Uitdrukkingen en zegswijzen maken je wedstrijdverslag levendig. 
+                                Denk eraan: een <strong>gezegde</strong> heeft nooit een werkwoord, dus dat plak je als een 'sticker' in je zin!
+                            </p>
+                        </footer>
                     </div>
-                  </div>
-                  
-                  <h3 className="text-2xl font-bold text-slate-800 mb-8 text-center">
-                    Welke categorie is dit? <br/>
-                    <span className="text-blue-600 mt-2 block italic text-3xl">"{quizQuestions[currentQuestion].text}"</span>
-                  </h3>
-
-                  <div className="grid gap-3">
-                    {quizQuestions[currentQuestion].options.map((opt, i) => (
-                      <button
-                        key={i}
-                        onClick={() => handleAnswer(i)}
-                        className="w-full text-left p-4 rounded-xl border-2 border-slate-100 hover:border-blue-500 hover:bg-blue-50 transition-all font-bold text-slate-700 flex justify-between items-center group"
-                      >
-                        {opt}
-                        <div className="w-6 h-6 rounded-full border-2 border-slate-200 group-hover:border-blue-500"></div>
-                      </button>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <div className="text-center">
-                  <div className="inline-block p-4 bg-green-100 rounded-full mb-4">
-                    <CheckCircle2 size={48} className="text-green-600" />
-                  </div>
-                  <h3 className="text-3xl font-bold text-slate-800 mb-2">Eindsignaal!</h3>
-                  <p className="text-slate-600 text-lg mb-6">Je score: <span className="text-blue-600 font-extrabold">{score} van de {quizQuestions.length}</span></p>
-                  
-                  <div className="space-y-4 text-left mb-8 max-h-60 overflow-y-auto pr-2">
-                    <p className="font-bold text-slate-700">Terugblik op de wedstrijd:</p>
-                    {quizQuestions.map((q, i) => (
-                      <div key={i} className="text-sm p-3 bg-slate-50 rounded-lg border-l-4 border-blue-400">
-                        <p className="font-bold">{q.text}</p>
-                        <p className="text-slate-600">{q.explanation}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  <button 
-                    onClick={resetQuiz}
-                    className="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors"
-                  >
-                    Opnieuw proberen
-                  </button>
                 </div>
-              )}
-            </div>
-          </div>
-        )}
+            );
+        };
 
-        <footer className="mt-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-            <h4 className="font-bold text-slate-800 mb-2 flex items-center gap-2">
-              <ClipboardList size={20} className="text-blue-600" />
-              Pro Tip voor je Verslag
-            </h4>
-            <p className="text-slate-600 text-sm">
-              Spreuken zijn perfect als <strong>tussenkopje</strong> of <strong>uitsmijter</strong> in een interview. Uitdrukkingen en zegswijzen maken je wedstrijdverslag levendig. 
-              Denk eraan: een <strong>gezegde</strong> heeft nooit een werkwoord, dus dat plak je als een 'sticker' in je zin!
-            </p>
-        </footer>
-      </div>
-    </div>
-  );
-};
-
-export default App;
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
